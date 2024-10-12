@@ -98,7 +98,7 @@ Outputs:
   ApiUrl:
     Description: "URL del endpoint expuesto por API Gateway"
     Value: 
-      Fn::Sub: "https://${ApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/prod/{proxy+}"
+      Fn::Sub: "https://${ApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/dev/{proxy+}"
 
   S3BucketName:
     Description: "Nombre del bucket S3 donde se almacena el ZIP de la Lambda"
