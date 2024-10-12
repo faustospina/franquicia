@@ -6,7 +6,9 @@ import reactor.core.publisher.Mono;
 
 public interface SucursalService {
 
-    Mono<SucursalDTO> create(SucursalDTO sucursalDTO);
+    Mono<SucursalDTO> create(String nombre);
+
+    Mono<SucursalDTO> createSucursalIntranet(SucursalDTO sucursalDTO);
 
     Mono<SucursalDTO> addNewProductToSucursal(String id, ProductoDTO productoDTO);
     Mono<SucursalDTO> removeProductFromSucursal(String id, String productoId);

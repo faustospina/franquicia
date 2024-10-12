@@ -1,0 +1,105 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: "Infraestructura completa: Lambda en Java 17 con S3 y API Gateway Público"
+
+Resources:
+  # Bucket S3 para almacenar el archivo ZIP de la Lambda
+  LambdaS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: nequi-franquicia-lambda-bucket
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  # Role para la Lambda Function
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: LambdaBasicExecution
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "arn:aws:logs:*:*:*"
+
+  # Lambda Function
+  NequiFranquiciaLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: nequi-franquicia-lambda
+      Handler: com.nequi.StreamLambdaHandler::handleRequest
+      Runtime: java17
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        S3Bucket: !Ref LambdaS3Bucket
+        S3Key: lambda/nequi-franquicia-lambda.zip  # ZIP se subirá a esta ruta
+      MemorySize: 512
+      Timeout: 30
+      Description: "Lambda Function para la franquicia Nequi expuesta por API Gateway"
+
+  # API Gateway REST API
+  ApiGatewayRestApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: "NequiFranquiciaApiGateway"
+      Description: "API Gateway para invocar la Lambda de Nequi"
+      EndpointConfiguration:
+        Types: 
+          - REGIONAL
+
+  # Recurso API Gateway para permitir proxificación completa
+  ApiGatewayResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt ApiGatewayRestApi.RootResourceId
+      PathPart: "{proxy+}"
+      RestApiId: !Ref ApiGatewayRestApi
+
+  # Método ANY para manejar cualquier tipo de solicitud HTTP
+  ApiGatewayMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ApiGatewayRestApi
+      ResourceId: !Ref ApiGatewayResource
+      HttpMethod: ANY
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: 
+          Fn::Sub: 
+            - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
+            - Region: !Ref "AWS::Region"
+              LambdaArn: !GetAtt NequiFranquiciaLambda.Arn
+
+  # Permiso para que API Gateway invoque la Lambda
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref NequiFranquiciaLambda
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+
+Outputs:
+  ApiUrl:
+    Description: "URL del endpoint expuesto por API Gateway"
+    Value: 
+      Fn::Sub: "https://${ApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/prod/{proxy+}"
+
+  S3BucketName:
+    Description: "Nombre del bucket S3 donde se almacena el ZIP de la Lambda"
+    Value: !Ref LambdaS3Bucket

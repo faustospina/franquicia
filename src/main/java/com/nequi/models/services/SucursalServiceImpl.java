@@ -1,7 +1,6 @@
 package com.nequi.models.services;
 
 import com.nequi.exception.BusinessException;
-import com.nequi.exception.ExceptionType;
 import com.nequi.models.documents.Producto;
 import com.nequi.models.documents.Sucursal;
 import com.nequi.models.dto.ProductoDTO;
@@ -34,7 +33,13 @@ public class SucursalServiceImpl implements SucursalService{
 
 
     @Override
-    public Mono<SucursalDTO> create(SucursalDTO sucursalDTO) {
+    public Mono<SucursalDTO> create(String nombre) {
+        Sucursal sucursal = mapper.toEntity(SucursalDTO.builder().nombre(nombre).build());
+        return repository.save(sucursal).map(saveSucursal ->mapper.toDTO(saveSucursal));
+    }
+
+    @Override
+    public Mono<SucursalDTO> createSucursalIntranet(SucursalDTO sucursalDTO) {
         Sucursal sucursal = mapper.toEntity(sucursalDTO);
         return repository.save(sucursal).map(saveSucursal ->mapper.toDTO(saveSucursal));
     }

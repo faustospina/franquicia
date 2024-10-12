@@ -1,7 +1,6 @@
 package com.nequi.models.services;
 
 import com.nequi.exception.BusinessException;
-import com.nequi.exception.ExceptionType;
 import com.nequi.models.documents.Producto;
 import com.nequi.models.dto.ProductoDTO;
 import com.nequi.models.mapper.ProductoMapper;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.util.UUID;
 
 @Service
 public class ProductoServiceImpl implements ProductoService{

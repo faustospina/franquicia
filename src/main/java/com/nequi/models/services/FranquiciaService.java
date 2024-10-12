@@ -9,11 +9,11 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 public interface FranquiciaService {
-    Mono<FranquiciaDTO> create(FranquiciaDTO franquiciaDTO);
+    Mono<FranquiciaDTO> create(String nombre);
 
     Mono<FranquiciaDTO> addSucursalToFranquicia(String franquiciaId, SucursalDTO sucursalDTO);
 
-    Mono<List<ProductoStockDTO>> getProductoConMayorStockPorSucursal(String franquiciaId);
+    Mono<List<ProductoStockDTO>> getProductoConMayorStockPorSucursal(String id);
 
     Mono<FranquiciaDTO> updateNameFranquicia(String id,String name);
 }

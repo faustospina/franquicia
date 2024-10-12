@@ -1,0 +1,311 @@
+{
+	"info": {
+		"_postman_id": "590f1c0a-856f-4c30-b992-afb61ccc9e98",
+		"name": "NEQUI-FRANQUICIA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1573654"
+	},
+	"item": [
+		{
+			"name": "PRODUCTO",
+			"item": [
+				{
+					"name": "CREATE-PRODUCTO",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\":\"producto 6\",\r\n    \"cantidadStock\":120\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "ENDPOINT/producto",
+							"host": [
+								"ENDPOINT"
+							],
+							"path": [
+								"producto"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE-NOMBRE",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\":\"producto 7\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "ENDPOINT/producto/6709acbd0c41e25942447bb6/nombre",
+							"host": [
+								"ENDPOINT"
+							],
+							"path": [
+								"producto",
+								"6709acbd0c41e25942447bb6",
+								"nombre"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE-STOCK",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cantidadStock\":200\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "ENDPOINT/producto/stock/6709acbd0c41e25942447bb6",
+							"host": [
+								"ENDPOINT"
+							],
+							"path": [
+								"producto",
+								"stock",
+								"6709acbd0c41e25942447bb6"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SUCURSAL",
+			"item": [
+				{
+					"name": "CREATE-SUCURSAL",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"sucursal 4\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "ENDPOINT/sucursal",
+							"host": [
+								"ENDPOINT"
+							],
+							"path": [
+								"sucursal"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE-NAME-SUCURSAL",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\":\"sucursal 2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "ENDPOINT/sucursal/670a649e0b7fd87f90454038/nombre",
+							"host": [
+								"ENDPOINT"
+							],
+							"path": [
+								"sucursal",
+								"670a649e0b7fd87f90454038",
+								"nombre"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ADD-PRODUCTO-SUCURSAL",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"producto-nuevo-2\",\r\n    \"cantidadStock\": 100\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "ENDPOINT/sucursal/670a5df29886f14ab5243999/add-product",
+							"host": [
+								"ENDPOINT"
+							],
+							"path": [
+								"sucursal",
+								"670a5df29886f14ab5243999",
+								"add-product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "REMOVE-PRODUCTO-SUCURSAL",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "ENDPOINT/sucursal/6709b3352e389b13b1d9f0f1/remove-product/6709b3712e389b13b1d9f0f2",
+							"host": [
+								"ENDPOINT"
+							],
+							"path": [
+								"sucursal",
+								"6709b3352e389b13b1d9f0f1",
+								"remove-product",
+								"6709b3712e389b13b1d9f0f2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "FRANQUICIA",
+			"item": [
+				{
+					"name": "CREATE-FRANQUICIA",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"franquicia 2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "ENDPOINT/franquicia",
+							"host": [
+								"ENDPOINT"
+							],
+							"path": [
+								"franquicia"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ADD-SUCURSAL-FRANQUICIA",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"670a69ea954a077f642f5b1a\",\r\n    \"nombre\": \"sucursal 3\",\r\n    \"productos\": [\r\n        {\r\n            \"id\": \"670a5b970c5a6249196e08d5\",\r\n            \"nombre\": \"producto-NUEVO\",\r\n            \"cantidadStock\": 40\r\n        },\r\n        {\r\n            \"id\": \"670a647c0b7fd87f90454037\",\r\n            \"nombre\": \"producto-NUEVO\",\r\n            \"cantidadStock\": 100\r\n        },\r\n        {\r\n            \"id\": \"670a66100b7fd87f9045403a\",\r\n            \"nombre\": \"producto-nuevo-2\",\r\n            \"cantidadStock\": 200\r\n        },\r\n        {\r\n            \"id\": \"670a64c70b7fd87f90454039\",\r\n            \"nombre\": \"producto-nuevo-2\",\r\n            \"cantidadStock\": 10\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "ENDPOINT/franquicia/670a5ad10c5a6249196e08d4/add-sucursal",
+							"host": [
+								"ENDPOINT"
+							],
+							"path": [
+								"franquicia",
+								"670a5ad10c5a6249196e08d4",
+								"add-sucursal"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE-NAME-FRANQUICIA",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\":\"full franquicia\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "ENDPOINT/franquicia/670a5ad10c5a6249196e08d4/nombre",
+							"host": [
+								"ENDPOINT"
+							],
+							"path": [
+								"franquicia",
+								"670a5ad10c5a6249196e08d4",
+								"nombre"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MAX-STOCK-SUCURSAL-BY-FRANQUICIA",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "ENDPOINT/franquicia/670a5ad10c5a6249196e08d4/productos/max-stock",
+							"host": [
+								"ENDPOINT"
+							],
+							"path": [
+								"franquicia",
+								"670a5ad10c5a6249196e08d4",
+								"productos",
+								"max-stock"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -3,6 +3,8 @@ import com.nequi.models.dto.ProductoDTO;
 import com.nequi.models.dto.SucursalDTO;
 import com.nequi.models.services.SucursalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -20,7 +22,7 @@ public class SucursalHandler {
 
     public Mono<ServerResponse> create(ServerRequest request){
         return request.bodyToMono(SucursalDTO.class)
-                .flatMap(SucursalDTO->service.create(SucursalDTO).flatMap(productoOut->ServerResponse
+                .flatMap(sucursalDTO->service.create(sucursalDTO.getNombre()).flatMap(productoOut->ServerResponse
                         .created(URI.create("/sucursal".concat(productoOut.getId())))
                         .contentType(APPLICATION_JSON)
                         .body(fromObject(productoOut))
@@ -54,14 +56,14 @@ public class SucursalHandler {
 
     public Mono<ServerResponse> updateNameSucursal(ServerRequest request) {
         String id = request.pathVariable("id");
-        String name = request.pathVariable("sucursalName");
-        return service.updateNameSucursal(id, name)
-                .flatMap(updatedSucursal -> ServerResponse
-                        .ok()
-                        .contentType(APPLICATION_JSON)
-                        .body(fromObject(updatedSucursal))
-                )
-                .switchIfEmpty(ServerResponse.notFound().build());
+        return request.bodyToMono(SucursalDTO.class)
+                .flatMap(sucursalDto -> service.updateNameSucursal(id, sucursalDto.getNombre()))
+                .flatMap(updateSucursal -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(updateSucursal))
+                .switchIfEmpty(ServerResponse.notFound().build())
+                .onErrorResume(e -> ServerResponse.status(HttpStatus.BAD_REQUEST)
+                        .bodyValue(e.getMessage()));
     }
 
 }

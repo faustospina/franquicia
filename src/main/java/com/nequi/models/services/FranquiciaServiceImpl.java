@@ -1,7 +1,6 @@
 package com.nequi.models.services;
 
 import com.nequi.exception.BusinessException;
-import com.nequi.exception.ExceptionType;
 import com.nequi.models.documents.Franquicia;
 import com.nequi.models.documents.Producto;
 import com.nequi.models.documents.Sucursal;
@@ -41,9 +40,8 @@ public class FranquiciaServiceImpl implements FranquiciaService {
     private SucursalService sucursalService;
 
     @Override
-    public Mono<FranquiciaDTO> create(FranquiciaDTO franquiciaDTO) {
-        Franquicia franquicia = mapper.toEntity(franquiciaDTO);
-
+    public Mono<FranquiciaDTO> create(String nombre) {
+        Franquicia franquicia = mapper.toEntity(FranquiciaDTO.builder().nombre(nombre).build());
         return repository.save(franquicia)
                 .map(savedFranquicia -> mapper.toDTO(savedFranquicia));
     }
@@ -52,14 +50,12 @@ public class FranquiciaServiceImpl implements FranquiciaService {
     public Mono<FranquiciaDTO> addSucursalToFranquicia(String franquiciaId, SucursalDTO sucursalDTO) {
         return repository.findById(franquiciaId)
                 .flatMap(franquicia ->
-                        sucursalService.create(sucursalDTO)
+                        sucursalService.createSucursalIntranet(sucursalDTO)
                                 .flatMap(nuevoSucursal -> {
                                     Sucursal sucursal = sucursalMapper.toEntity(nuevoSucursal);
-
-                                    if (sucursal.getProductos() == null) {
-                                        sucursal.setProductos(new ArrayList<>());
+                                    if (franquicia.getSucursales() == null) {
+                                        franquicia.setSucursales(new ArrayList<>());
                                     }
-
                                     franquicia.getSucursales().add(sucursal);
 
                                     return repository.save(franquicia);
@@ -74,15 +70,19 @@ public class FranquiciaServiceImpl implements FranquiciaService {
     public Mono<List<ProductoStockDTO>> getProductoConMayorStockPorSucursal(String franquiciaId) {
         return repository.findById(franquiciaId)
                 .flatMapMany(franquicia -> Flux.fromIterable(franquicia.getSucursales()))
-                .flatMap(sucursal ->  Mono.justOrEmpty(
+                .flatMap(sucursal ->
+                    Mono.justOrEmpty(
                             sucursal.getProductos().stream()
-                                    .max(Comparator.comparing(Producto::getCantidadStock))
+                                    .filter(producto -> producto.getCantidadStock() != null && producto.getCantidadStock() > 0)
+                                    .max(Comparator.comparingInt(Producto::getCantidadStock))
                     ).map(productoConMayorStock ->
-                            new ProductoStockDTO(sucursal.getNombre(), productoMapper.toDTO(productoConMayorStock))
+                        new ProductoStockDTO(sucursal.getNombre(), productoMapper.toDTO(productoConMayorStock))
                     )
                 )
                 .collectList();
     }
+
+
 
     @Override
     public Mono<FranquiciaDTO> updateNameFranquicia(String id, String name) {
